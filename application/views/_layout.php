@@ -163,7 +163,7 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Add Unit</a></li>
+                  <li><a href="<?php echo base_url("unit/add"); ?>"><i class="fa fa-circle-o"></i> Add Unit</a></li>
                   <li><a href="<?php echo base_url("unit"); ?>"><i class="fa fa-circle-o"></i> Unit List</a></li>
                 </ul>
               </li>

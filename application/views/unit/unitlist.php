@@ -16,7 +16,7 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    &nbsp;
+                    <a href="<?php echo base_url('unit/add');  ?>" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Add Unit</a>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">

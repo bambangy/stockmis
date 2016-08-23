@@ -1,6 +1,11 @@
 <section class="content-header">
     <h1>
         <?php echo $title; ?>
+        <small><?php 
+        if($edit == true || $view == true){
+            echo "(".set_value('name', isset($form_data->name)?$form_data->name : '').")";
+        } 
+        ?></small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -15,7 +20,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">User Information</h3>
                 </div>
-                <form class="form-horizontal" action="<?php echo $form_action; ?>" method="post">
+                <form class="form-horizontal" action="<?php echo base_url($form_action); ?>" method="post">
                     <input type="hidden" name="id" value="<?php echo set_value('id', isset($form_data->id)?$form_data->id : ''); ?>" >
                     <div class="box-body">
                         <div class="row">
@@ -101,7 +106,7 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <a href="<?php echo ($edit == true ? base_url('user/view/'.(isset($form_data->id)?$form_data->id : '')) : base_url('user')); ?>" class="btn btn-default">Cancel</a>
+                        <a href="<?php echo ($edit == true ? base_url('user/view/'.set_value('id', (isset($form_data->id)?$form_data->id : ''))) : base_url('user')); ?>" class="btn btn-default">Cancel</a>
                         <?php if($view == false){ ?>
                             <button type="submit" class="btn btn-info"><i class="fa fa-floppy-o"></i> Save</button>
                         <?php }else{ ?>

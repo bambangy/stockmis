@@ -30,7 +30,7 @@ class User extends MY_Controller{
 
     public function add(){
         $this->model["title"] = "Add User";
-        $this->model["data"]["form_action"] = "user/edit";
+        $this->model["data"]["form_action"] = "user/add";
         if($this->input->method() == 'post'){
             if($this->mod_user->validate()){
                 if($this->mod_user->isusernameexists()){
@@ -39,7 +39,6 @@ class User extends MY_Controller{
                     $this->load->view("_layout", $this->model);
                 }else{
                     $this->mod_user->save_user();
-                    $this->model["view"] = "user/userlist";
                     $this->session->set_flashdata('message', 'User successfully saved');
                     $this->session->set_flashdata('messageType', 'success');
                     redirect('user');
@@ -57,27 +56,26 @@ class User extends MY_Controller{
         $this->model["data"]["title"] = "Edit User";
         $this->model["data"]["edit"] = true;
         $this->model["data"]["form_action"] = "user/edit";
-        if($id == ""){
-            $this->session->set_flashdata('message', 'Invalid id');
-            $this->session->set_flashdata('messageType', 'warning');
-            redirect('user');
-        }else{
-            if($this->input->method() == 'post'){
-                if($this->mod_user->validate2()){
-                    if($this->mod_user->matchespassmanual()){
-                        $this->mod_user->save_user();
-                        $this->model["view"] = "user/userlist";
-                        $this->session->set_flashdata('message', 'User successfully saved');
-                        $this->session->set_flashdata('messageType', 'success');
-                        redirect('user');
-                    }else{
-                        $this->model["message"] = "Password confirmation missmatch";
-                        $this->model["messageType"] = "danger";
-                        $this->load->view("_layout", $this->model);
-                    }
+        if($this->input->method() == 'post'){
+            if($this->mod_user->validate2()){
+                if($this->mod_user->matchespassmanual()){
+                    $this->mod_user->save_user();
+                    $this->session->set_flashdata('message', 'User successfully saved');
+                    $this->session->set_flashdata('messageType', 'success');
+                    redirect('user');
                 }else{
+                    $this->model["message"] = "Password confirmation missmatch";
+                    $this->model["messageType"] = "danger";
                     $this->load->view("_layout", $this->model);
                 }
+            }else{
+                $this->load->view("_layout", $this->model);
+            }
+        }else{
+            if($id == ""){
+                $this->session->set_flashdata('message', 'Invalid id');
+                $this->session->set_flashdata('messageType', 'warning');
+                redirect('user');
             }else{
                 $userdata = $this->mod_user->getuser($id);
                 if($userdata != null){
