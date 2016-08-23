@@ -163,11 +163,11 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Add Unit</a></li>
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Unit List</a></li>
+                  <li><a href="<?php echo base_url("unit/add"); ?>"><i class="fa fa-circle-o"></i> Add Unit</a></li>
+                  <li><a href="<?php echo base_url("unit"); ?>"><i class="fa fa-circle-o"></i> Unit List</a></li>
                 </ul>
               </li>
-              <li>
+              <!--<li>
                 <a href="#"><i class="fa fa-circle-o"></i> Supplier
                   <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
@@ -177,7 +177,7 @@
                   <li><a href="#"><i class="fa fa-circle-o"></i> Add Supplier</a></li>
                   <li><a href="#"><i class="fa fa-circle-o"></i> Supplier List</a></li>
                 </ul>
-              </li>
+              </li>-->
               <li>
                 <a href="#"><i class="fa fa-circle-o"></i> User
                   <span class="pull-right-container">

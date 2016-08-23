@@ -1,8 +1,10 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
 -- Server version:               5.7.11 - MySQL Community Server (GPL)
--- Server OS:                    Win64
+-- Server OS:                    Win32
 -- HeidiSQL Version:             9.3.0.4984
+-- Auhtor:                       bambangyudhotomo@gmail.com
+-- Last Update:                  23/08/2016 23:39
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -11,11 +13,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping database structure for persediaandb
+DROP DATABASE IF EXISTS `persediaandb`;
 CREATE DATABASE IF NOT EXISTS `persediaandb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `persediaandb`;
 
 
 -- Dumping structure for table persediaandb.mst_item
+DROP TABLE IF EXISTS `mst_item`;
 CREATE TABLE IF NOT EXISTS `mst_item` (
   `id` char(64) NOT NULL,
   `code` char(15) NOT NULL,
@@ -31,6 +35,7 @@ DELETE FROM `mst_item`;
 
 
 -- Dumping structure for table persediaandb.mst_order_detail_status
+DROP TABLE IF EXISTS `mst_order_detail_status`;
 CREATE TABLE IF NOT EXISTS `mst_order_detail_status` (
   `code` char(10) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -50,6 +55,7 @@ INSERT INTO `mst_order_detail_status` (`code`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_order_status
+DROP TABLE IF EXISTS `mst_order_status`;
 CREATE TABLE IF NOT EXISTS `mst_order_status` (
   `code` char(5) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
@@ -67,6 +73,7 @@ INSERT INTO `mst_order_status` (`code`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_profile
+DROP TABLE IF EXISTS `mst_profile`;
 CREATE TABLE IF NOT EXISTS `mst_profile` (
   `id` char(64) NOT NULL,
   `unitid` char(64) DEFAULT NULL,
@@ -79,18 +86,18 @@ CREATE TABLE IF NOT EXISTS `mst_profile` (
   CONSTRAINT `FK_mst_profile_mst_unit` FOREIGN KEY (`unitid`) REFERENCES `mst_unit` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.mst_profile: ~4 rows (approximately)
+-- Dumping data for table persediaandb.mst_profile: ~3 rows (approximately)
 DELETE FROM `mst_profile`;
 /*!40000 ALTER TABLE `mst_profile` DISABLE KEYS */;
 INSERT INTO `mst_profile` (`id`, `unitid`, `name`, `position`, `title`, `nip`) VALUES
-	('55A37333-5DC3-43F5-ACC7-731EB2ED5EC5', NULL, 'Bagus', '', '', ''),
-	('63CC67BB-F7F1-45F2-BE59-BA58EBD424D1', NULL, 'Eko Cahyono', '', '', ''),
-	('a3ebf587-687a-11e6-a763-00aceea37ffa', NULL, 'Bima SP', 'Admin IT', 'Sdr', ''),
-	('BDE60B18-23FF-4083-B27C-4AD0231BF183', NULL, 'Cahyadi', '', '', '');
+	('55A37333-5DC3-43F5-ACC7-731EB2ED5EC5', NULL, 'Bagus Waluyo e', '', '', ''),
+	('63CC67BB-F7F1-45F2-BE59-BA58EBD424D1', NULL, 'Eko Cahyono E', '', '', ''),
+	('a3ebf587-687a-11e6-a763-00aceea37ffa', NULL, 'Bima SP', 'Admin IT', 'Sdr', '');
 /*!40000 ALTER TABLE `mst_profile` ENABLE KEYS */;
 
 
 -- Dumping structure for table persediaandb.mst_role
+DROP TABLE IF EXISTS `mst_role`;
 CREATE TABLE IF NOT EXISTS `mst_role` (
   `id` char(64) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -108,6 +115,7 @@ INSERT INTO `mst_role` (`id`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_supplier
+DROP TABLE IF EXISTS `mst_supplier`;
 CREATE TABLE IF NOT EXISTS `mst_supplier` (
   `id` char(64) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -123,6 +131,7 @@ DELETE FROM `mst_supplier`;
 
 
 -- Dumping structure for table persediaandb.mst_unit
+DROP TABLE IF EXISTS `mst_unit`;
 CREATE TABLE IF NOT EXISTS `mst_unit` (
   `id` char(64) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -130,13 +139,17 @@ CREATE TABLE IF NOT EXISTS `mst_unit` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.mst_unit: ~0 rows (approximately)
+-- Dumping data for table persediaandb.mst_unit: ~2 rows (approximately)
 DELETE FROM `mst_unit`;
 /*!40000 ALTER TABLE `mst_unit` DISABLE KEYS */;
+INSERT INTO `mst_unit` (`id`, `name`, `code`) VALUES
+	('7DB0E571-CBF3-434C-BE7E-1DE790928494', 'TKK', 'TKK'),
+	('9378C8FA-FFD1-47B4-94F9-34B06B9714A9', 'Dokter Umum MOU', 'DOKUM');
 /*!40000 ALTER TABLE `mst_unit` ENABLE KEYS */;
 
 
 -- Dumping structure for table persediaandb.mst_user
+DROP TABLE IF EXISTS `mst_user`;
 CREATE TABLE IF NOT EXISTS `mst_user` (
   `id` char(64) NOT NULL,
   `roleid` char(64) NOT NULL,
@@ -149,18 +162,18 @@ CREATE TABLE IF NOT EXISTS `mst_user` (
   CONSTRAINT `FK_mst_user_mst_role` FOREIGN KEY (`roleid`) REFERENCES `mst_role` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.mst_user: ~4 rows (approximately)
+-- Dumping data for table persediaandb.mst_user: ~3 rows (approximately)
 DELETE FROM `mst_user`;
 /*!40000 ALTER TABLE `mst_user` DISABLE KEYS */;
 INSERT INTO `mst_user` (`id`, `roleid`, `username`, `hashpassword`, `isactive`) VALUES
-	('55A37333-5DC3-43F5-ACC7-731EB2ED5EC5', 'd45b2d0a-6844-11e6-94f0-62d712d1e403', 'bagus123', '$2y$11$YguaxtCp7yE6.PJTUPWXbuZGtB1Fc9wrr5hkqsCDfcTOPMg5moIVm', 1),
+	('55A37333-5DC3-43F5-ACC7-731EB2ED5EC5', 'd45b2d0a-6844-11e6-94f0-62d712d1e403', 'bagus123', '$2y$11$DCKJdNLUr/o788U9xvUzn.a/NjK1Pq4/0O30x9/f8Iv5oVMz1o/mW', 0),
 	('63CC67BB-F7F1-45F2-BE59-BA58EBD424D1', 'd45b2dd4-6844-11e6-94f0-62d712d1e403', 'eko123', '$2y$11$YMNEbvsueUXws2ASoRf.tuW.jyq7ab0C/o4a3uL3ZagL1PfLpvxtC', 1),
-	('a3ebf587-687a-11e6-a763-00aceea37ffa', 'd45b28f4-6844-11e6-94f0-62d712d1e403', 'admin', '$2y$11$eT6ZMdSv2ikzW6SrjibOLeOYqaiOwDw0dEb7/Y.VvguuqZzF0WrtW', 1),
-	('BDE60B18-23FF-4083-B27C-4AD0231BF183', 'd45b2dd4-6844-11e6-94f0-62d712d1e403', 'yadi123', '$2y$11$6SHCfNo6XDULSGlE4URZGeJHwFM.a/vAOq4cFKUhyZwaM4MxH9w0a', 1);
+	('a3ebf587-687a-11e6-a763-00aceea37ffa', 'd45b28f4-6844-11e6-94f0-62d712d1e403', 'admin', '$2y$11$eT6ZMdSv2ikzW6SrjibOLeOYqaiOwDw0dEb7/Y.VvguuqZzF0WrtW', 1);
 /*!40000 ALTER TABLE `mst_user` ENABLE KEYS */;
 
 
 -- Dumping structure for table persediaandb.tsc_order
+DROP TABLE IF EXISTS `tsc_order`;
 CREATE TABLE IF NOT EXISTS `tsc_order` (
   `id` char(64) NOT NULL,
   `tagcode` char(10) NOT NULL,
@@ -184,6 +197,7 @@ DELETE FROM `tsc_order`;
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail
+DROP TABLE IF EXISTS `tsc_order_detail`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail` (
   `id` char(64) NOT NULL,
   `orderid` char(64) NOT NULL,
@@ -206,6 +220,7 @@ DELETE FROM `tsc_order_detail`;
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail_return
+DROP TABLE IF EXISTS `tsc_order_detail_return`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail_return` (
   `id` char(64) NOT NULL,
   `reason` text NOT NULL,
@@ -222,6 +237,7 @@ DELETE FROM `tsc_order_detail_return`;
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail_taken
+DROP TABLE IF EXISTS `tsc_order_detail_taken`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail_taken` (
   `id` char(64) NOT NULL,
   `note` text NOT NULL,
@@ -237,6 +253,7 @@ DELETE FROM `tsc_order_detail_taken`;
 
 
 -- Dumping structure for table persediaandb.tsc_stock
+DROP TABLE IF EXISTS `tsc_stock`;
 CREATE TABLE IF NOT EXISTS `tsc_stock` (
   `id` char(64) NOT NULL,
   `itemid` char(64) NOT NULL,

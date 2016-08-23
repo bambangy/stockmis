@@ -7,7 +7,11 @@ class MY_Controller extends CI_Controller{
         "view" => array(),
         "message" => "",
         "messageType" => "",
-        "data" => array()
+        "data" => array(
+            "title" => "",
+            "form_action" => "",
+            "form_data" => ""
+        )
     );
     public function __construct(){
         parent::__construct();

@@ -46,6 +46,11 @@ class Mod_user extends CI_Model{
                 "rules" => ""
             ),
             array(
+                "field" => "status",
+                "label" => "Status",
+                "rules" => ""
+            ),
+            array(
                 "field" => "username",
                 "label" => "Username",
                 "rules" => "required"
@@ -74,7 +79,38 @@ class Mod_user extends CI_Model{
         return $rule;
     }
 
-    // Validation for login form
+    public function form_user_rule2(){
+        $rule = array(
+            array(
+                "field" => "id",
+                "label" => "id",
+                "rules" => ""
+            ),
+            array(
+                "field" => "status",
+                "label" => "Status",
+                "rules" => ""
+            ),
+            array(
+                "field" => "username",
+                "label" => "Username",
+                "rules" => "required"
+            ),
+            array(
+                "field" => "name",
+                "label" => "Name",
+                "rules" => "required"
+            ),
+            array(
+                "field" => "roleid",
+                "label" => "Role",
+                "rules" => "required"
+            ),
+        );
+        return $rule;
+    }
+
+    // Validation for add form
     public function validate(){
         $form = $this->form_user_rule();
         $this->form_validation->set_rules($form);
@@ -82,6 +118,25 @@ class Mod_user extends CI_Model{
             return TRUE;
         }else{
             return FALSE;
+        }
+    }
+
+    // Validation for edit
+    public function validate2(){
+        $form = $this->form_user_rule2();
+        $this->form_validation->set_rules($form);
+        if($this->form_validation->run()){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+
+    public function matchespassmanual(){
+        if($this->input->post("password") != ""){
+            return $this->input->post("password") == $this->input->post("confirmpassword");
+        }else{
+            return true;
         }
     }
 
@@ -99,19 +154,22 @@ class Mod_user extends CI_Model{
             $this->db->query("insert into mst_profile(id, unitid, name, position, title, nip) 
             values('".$id."', ".$unitid.", '".$this->input->post('name')."', '', '', '')");
             $this->db->query("insert into mst_user(id, roleid, username, hashpassword, isactive) 
-            values('".$id."', '".$this->input->post('roleid')."', '".$this->input->post('username')."', '".$hashed."', 1)");
+            values('".$id."', '".$this->input->post('roleid')."', '".$this->input->post('username')."', '".$hashed."', 
+            ".$this->input->post('status').")");
         }else{
             $this->db->query("update mst_profile set  
-                unitid = '".$this->input->post('unitid')."', 
+                unitid = ".$unitid.", 
                 name =  '".$this->input->post('name')."'
                 where id = '".$id."'");
             if($this->input->post("password") == ""){
                 $this->db->query("update mst_user set
-                    roleid = '".$this->input->post('roleid')."'
+                    roleid = '".$this->input->post('roleid')."',
+                    isactive = ".$this->input->post('status')."
                     where id = '".$id."'");
             }else{
                 $this->db->query("update mst_user set
-                    roleid = '".$this->input->post('roleid')."', 
+                    roleid = '".$this->input->post('roleid')."',
+                    isactive = ".$this->input->post('status').",
                     hashpassword = '".$hashed."'
                     where id = '".$id."'");
             }
@@ -137,5 +195,17 @@ class Mod_user extends CI_Model{
         }else{
             return null;
         }
+    }
+
+    public function userstatus(){
+        return array(
+            1 => "Active",
+            0 => "Inactive"
+        );
+    }
+
+    public function deleteuser(){
+        $this->db->query("delete from mst_user where id = '".$this->input->post("id")."'");
+        $this->db->query("delete from mst_profile where id = '".$this->input->post("id")."'");
     }
 }
