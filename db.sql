@@ -3,6 +3,8 @@
 -- Server version:               5.7.11 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL Version:             9.3.0.4984
+-- Auhtor:                       bambangyudhotomo@gmail.com
+-- Last Update:                  23/08/2016 23:39
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
