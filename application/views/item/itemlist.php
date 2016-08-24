@@ -8,7 +8,7 @@
     <ol class="breadcrumb">
         <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a href="#">Item</a></li>
-        <li class="active">Unit Item</li>
+        <li class="active">Item List</li>
     </ol>
 </section>
 <section class="content">
@@ -16,7 +16,7 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <a href="<?php echo base_url('item/add');  ?>" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Add Unit</a>
+                    <a href="<?php echo base_url('item/add');  ?>" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Add Item</a>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -26,6 +26,7 @@
                                 <th>Name</th>
                                 <th>Code</th>
                                 <th>Item Piece</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,6 +37,7 @@
                                         <td><a href="<?php echo base_url('item/view/'.$row->id); ?>"><?php echo $row->name; ?></a></td>
                                         <td><?php echo $row->code; ?></td>
                                         <td><?php echo $row->stockunit; ?></td>
+                                        <td><?php echo ($row->isused == true ? '<span class="label label-success">Used</span>' : '<span class="label label-danger">Unused</span>'); ?></td>
                                     </tr>
                                     <?php
                                 }

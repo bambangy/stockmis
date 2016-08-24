@@ -10,7 +10,7 @@
     <ol class="breadcrumb">
         <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a href="<?php echo base_url('item'); ?>">Item</a></li>
-        <li class="active">Add Item</li>
+        <li class="active"><?php echo ($view == true) ? "View" : (($edit) ? "Edit" : "Add")  ?> Item</li>
     </ol>
 </section>
 <section class="content">
@@ -52,6 +52,16 @@
                                     <div class="col-sm-10">
                                         <?php echo form_dropdown('stockunit', $pieceoptions, 
                                         set_value('stockunit', isset($form_data->stockunit)?$form_data->stockunit : ''), 
+                                        'class="form-control" '.($view == true ? "disabled" : "" ).' required'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Status</label>
+                                    <div class="col-sm-10">
+                                        <?php echo form_dropdown('isused', $statusoptions, 
+                                        set_value('isused', isset($form_data->isused)?$form_data->isused : ''), 
                                         'class="form-control" '.($view == true ? "disabled" : "" ).' required'); ?>
                                     </div>
                                 </div>

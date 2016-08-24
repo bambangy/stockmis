@@ -36,6 +36,7 @@
 <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js'); ?>"></script>
 <!-- AdminLTE App -->
 <script src="<?php echo base_url('assets/plugins/adminlte/js/app.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/plugins/tinymce/tinymce.min.js'); ?>"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
@@ -107,9 +108,9 @@
               </span>
             </a>
             <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Add Stock</a></li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Track Stock</a></li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Stock List</a></li>
+              <li><a href="<?php echo base_url("stock/add"); ?>"><i class="fa fa-circle-o"></i> Add Stock</a></li>
+              <li><a href="<?php echo base_url("stock/track"); ?>"><i class="fa fa-circle-o"></i> Track Stock</a></li>
+              <li><a href="<?php echo base_url("stock"); ?>"><i class="fa fa-circle-o"></i> Stock List</a></li>
             </ul>
           </li>
           <?php } ?>
@@ -246,5 +247,20 @@
         }
     ?>
 </div>
+<script>
+  $(function(){
+      tinymce.init({
+          selector: 'textarea',
+          selector: 'textarea',
+          plugins: [
+              'advlist autolink lists link image charmap print preview anchor',
+              'searchreplace visualblocks code fullscreen',
+              'insertdatetime media table contextmenu paste code'
+          ],
+          //toolbar: false,
+          menubar: 'tools'
+      });
+  });
+</script>
 </body>
 </html>

@@ -10,7 +10,7 @@
     <ol class="breadcrumb">
         <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a href="<?php echo base_url('unit'); ?>">Unit</a></li>
-        <li class="active">Add unit</li>
+        <li class="active"><?php echo ($view == true) ? "View" : (($edit) ? "Edit" : "Add")  ?> Unit</li>
     </ol>
 </section>
 <section class="content">

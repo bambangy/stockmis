@@ -19,6 +19,11 @@ class Mod_item extends CI_Model{
         return $query->result();
     }
 
+    public function getitemlist2(){
+        $query = $this->db->query("select * from mst_item where isused = 1");
+        return $query->result();
+    }
+
     public function form_item_rule(){
         $rule = array(
             array(
@@ -39,6 +44,11 @@ class Mod_item extends CI_Model{
             array(
                 "field" => "stockunit",
                 "label" => "stockunit",
+                "rules" => "required"
+            ),
+            array(
+                "field" => "isused",
+                "label" => "Status",
                 "rules" => "required"
             )
         );
@@ -84,14 +94,15 @@ class Mod_item extends CI_Model{
         }
         $check = $this->db->query("select * from mst_item where id = '".$id."'");
         if($check->num_rows() == 0){
-            $this->db->query("insert into mst_item(id, code, name, stockunit) 
+            $this->db->query("insert into mst_item(id, code, name, stockunit, isused) 
             values('".$id."', '".$this->input->post('code')."', '".$this->input->post('name')."'
-            , '".$this->input->post('stockunit')."')");
+            , '".$this->input->post('stockunit')."', ".$this->input->post('isused').")");
         }else{
             $this->db->query("update mst_item set  
                 code = '".$this->input->post('code')."', 
                 name =  '".$this->input->post('name')."',
-                stockunit = '".$this->input->post('stockunit')."'
+                stockunit = '".$this->input->post('stockunit')."',
+                isused = ".$this->input->post('isused')."
                 where id = '".$id."'");
         }
     }

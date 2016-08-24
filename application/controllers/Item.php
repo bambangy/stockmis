@@ -13,7 +13,11 @@ class Item extends MY_Controller{
             "form_data" => "",
             "edit" => false,
             "view" => false,
-            "pieceoptions" => $this->mod_item->getitempiece()
+            "pieceoptions" => $this->mod_item->getitempiece(),
+            "statusoptions" => array(
+                1 => "Used",
+                0 => "Unused"
+            )
         );
     }
 
@@ -129,5 +133,12 @@ class Item extends MY_Controller{
             $this->session->set_flashdata('messageType', 'danger');
             redirect('item');
         }
+    }
+
+    public function itemlist(){
+        $model = array(
+            "itemlist" => $this->mod_item->getitemlist2()
+        );
+        $this->load->view('item/modalitemlist', $model);
     }
 }
