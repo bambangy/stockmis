@@ -1,3 +1,4 @@
+<?php $role = $this->session->userdata("role"); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -96,6 +97,7 @@
               <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             </a>
           </li>
+          <?php if( $role == "Admin" || $role == "Matkes"){ ?>
           <li class="treeview">
             <a href="#">
               <i class="fa fa-cube"></i>
@@ -110,6 +112,8 @@
               <li><a href="#"><i class="fa fa-circle-o"></i> Stock List</a></li>
             </ul>
           </li>
+          <?php } ?>
+          <?php if( $role == "Admin" || $role == "Unit"){ ?>
           <li class="treeview">
             <a href="#">
               <i class="fa fa-shopping-cart"></i>
@@ -124,6 +128,8 @@
               <li><a href="#"><i class="fa fa-circle-o"></i> Order List</a></li>
             </ul>
           </li>
+          <?php } ?>
+          <?php if( $role == "Admin"){ ?>
           <li class="treeview">
             <a href="#">
               <i class="fa fa-flag"></i>
@@ -152,8 +158,8 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Add Item</a></li>
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Item List</a></li>
+                  <li><a href="<?php echo base_url("item/add"); ?>"><i class="fa fa-circle-o"></i> Add Item</a></li>
+                  <li><a href="<?php echo base_url("item"); ?>"><i class="fa fa-circle-o"></i> Item List</a></li>
                 </ul>
               </li>
               <li>
@@ -191,6 +197,7 @@
               </li>
             </ul>
           </li>
+          <?php } ?>
         </ul>
       </section>
       <!-- /.sidebar -->
