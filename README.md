@@ -7,7 +7,7 @@ STOCKMIS or SMIS is  Management Information System of Stock. This app have small
 ## Installation ##
 - Just download it or clone it.
 - Place it on your drive and nailed it with some mapped localhost port.
-- Deploy or import file `your-app-folder\db/sql` to your database server.
+- Deploy or import file `your-app-folder\db.sql` to your database server (better use heidisql).
 - Setting some file to use.
  - Setting basic config by open this file `your-app-folder\application\config\config.php`.
    Find this line code `$config['base_url'] = 'http://localhost/simpersediaan/';` and change it to `$config['base_url'] = 'http://localhost/your-app-folder-name/`
