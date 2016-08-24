@@ -3,8 +3,7 @@
 -- Server version:               5.7.11 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL Version:             9.3.0.4984
--- Auhtor:                       bambangyudhotomo@gmail.com
--- Last Update:                  23/08/2016 23:39
+-- Last Update:                  25/08/2016
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -25,12 +24,17 @@ CREATE TABLE IF NOT EXISTS `mst_item` (
   `code` char(15) NOT NULL,
   `name` varchar(100) NOT NULL,
   `stockunit` varchar(25) NOT NULL COMMENT 'unit untuk stock, bisa kg, litter, pcs dll',
+  `isused` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Barang';
 
--- Dumping data for table persediaandb.mst_item: ~0 rows (approximately)
+-- Dumping data for table persediaandb.mst_item: ~3 rows (approximately)
 DELETE FROM `mst_item`;
 /*!40000 ALTER TABLE `mst_item` DISABLE KEYS */;
+INSERT INTO `mst_item` (`id`, `code`, `name`, `stockunit`, `isused`) VALUES
+	('34FFE025-A980-463B-BC4A-12F5407B2E5F', '', 'Kain Kasa', 'Pack', 1),
+	('806E3621-C45E-409E-B9E5-B67A9F1947F4', '', 'Infus', 'PCS', 1),
+	('BE8F7088-1919-4C3E-A4D9-BABC50EAEDA6', '', 'Pampers', 'PCS', 1);
 /*!40000 ALTER TABLE `mst_item` ENABLE KEYS */;
 
 
@@ -166,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `mst_user` (
 DELETE FROM `mst_user`;
 /*!40000 ALTER TABLE `mst_user` DISABLE KEYS */;
 INSERT INTO `mst_user` (`id`, `roleid`, `username`, `hashpassword`, `isactive`) VALUES
-	('55A37333-5DC3-43F5-ACC7-731EB2ED5EC5', 'd45b2d0a-6844-11e6-94f0-62d712d1e403', 'bagus123', '$2y$11$DCKJdNLUr/o788U9xvUzn.a/NjK1Pq4/0O30x9/f8Iv5oVMz1o/mW', 0),
+	('55A37333-5DC3-43F5-ACC7-731EB2ED5EC5', 'd45b2d0a-6844-11e6-94f0-62d712d1e403', 'bagus123', '$2y$11$DCKJdNLUr/o788U9xvUzn.a/NjK1Pq4/0O30x9/f8Iv5oVMz1o/mW', 1),
 	('63CC67BB-F7F1-45F2-BE59-BA58EBD424D1', 'd45b2dd4-6844-11e6-94f0-62d712d1e403', 'eko123', '$2y$11$YMNEbvsueUXws2ASoRf.tuW.jyq7ab0C/o4a3uL3ZagL1PfLpvxtC', 1),
 	('a3ebf587-687a-11e6-a763-00aceea37ffa', 'd45b28f4-6844-11e6-94f0-62d712d1e403', 'admin', '$2y$11$eT6ZMdSv2ikzW6SrjibOLeOYqaiOwDw0dEb7/Y.VvguuqZzF0WrtW', 1);
 /*!40000 ALTER TABLE `mst_user` ENABLE KEYS */;
@@ -257,16 +261,24 @@ DROP TABLE IF EXISTS `tsc_stock`;
 CREATE TABLE IF NOT EXISTS `tsc_stock` (
   `id` char(64) NOT NULL,
   `itemid` char(64) NOT NULL,
+  `orderdetailid` char(64) DEFAULT NULL,
   `currentstock` decimal(18,2) NOT NULL,
   `stockdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `note` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK__mst_item` (`itemid`),
-  CONSTRAINT `FK__mst_item` FOREIGN KEY (`itemid`) REFERENCES `mst_item` (`id`)
+  KEY `FK_tsc_stock_tsc_order` (`orderdetailid`),
+  CONSTRAINT `FK__mst_item` FOREIGN KEY (`itemid`) REFERENCES `mst_item` (`id`),
+  CONSTRAINT `FK_tsc_stock_tsc_order` FOREIGN KEY (`orderdetailid`) REFERENCES `tsc_order_detail` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table persediaandb.tsc_stock: ~0 rows (approximately)
 DELETE FROM `tsc_stock`;
 /*!40000 ALTER TABLE `tsc_stock` DISABLE KEYS */;
+INSERT INTO `tsc_stock` (`id`, `itemid`, `orderdetailid`, `currentstock`, `stockdate`, `note`) VALUES
+	('0C82670E-DD54-409A-BD74-181AB36AD573', '34FFE025-A980-463B-BC4A-12F5407B2E5F', NULL, 10.00, '2016-08-25 01:08:40', '<p>stok awal</p>'),
+	('143591A8-FFAC-4708-8763-694837B6AA5F', 'BE8F7088-1919-4C3E-A4D9-BABC50EAEDA6', NULL, 20.00, '2016-08-25 01:10:38', '<p>stock awal</p>'),
+	('646E3B6D-B2EB-4686-BD29-955B93ABC1D2', '34FFE025-A980-463B-BC4A-12F5407B2E5F', NULL, 50.00, '2016-08-25 01:11:41', '<p>stock kedua</p>');
 /*!40000 ALTER TABLE `tsc_stock` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
