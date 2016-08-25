@@ -1,9 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
 -- Server version:               5.7.11 - MySQL Community Server (GPL)
--- Server OS:                    Win32
+-- Server OS:                    Win64
 -- HeidiSQL Version:             9.3.0.4984
--- Last Update:                  25/08/2016
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -46,15 +45,13 @@ CREATE TABLE IF NOT EXISTS `mst_order_detail_status` (
   PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.mst_order_detail_status: ~5 rows (approximately)
+-- Dumping data for table persediaandb.mst_order_detail_status: ~3 rows (approximately)
 DELETE FROM `mst_order_detail_status`;
 /*!40000 ALTER TABLE `mst_order_detail_status` DISABLE KEYS */;
 INSERT INTO `mst_order_detail_status` (`code`, `name`) VALUES
-	('IN', 'Inquiry'),
-	('OS', 'Out of stock'),
 	('SR', 'Stock Return'),
-	('SS', 'Sufficient Stock'),
-	('ST', 'Stock Taken');
+	('ST', 'Stock Taken'),
+	('WT', 'Wait To Take');
 /*!40000 ALTER TABLE `mst_order_detail_status` ENABLE KEYS */;
 
 
@@ -70,8 +67,8 @@ CREATE TABLE IF NOT EXISTS `mst_order_status` (
 DELETE FROM `mst_order_status`;
 /*!40000 ALTER TABLE `mst_order_status` DISABLE KEYS */;
 INSERT INTO `mst_order_status` (`code`, `name`) VALUES
+	('CANCE', 'Cancelled'),
 	('DONE', 'Done'),
-	('PEND', 'Pending'),
 	('PROC', 'Process');
 /*!40000 ALTER TABLE `mst_order_status` ENABLE KEYS */;
 
@@ -184,8 +181,8 @@ CREATE TABLE IF NOT EXISTS `tsc_order` (
   `userid` char(64) NOT NULL,
   `orderdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `itemcount` int(11) NOT NULL DEFAULT '0',
-  `grandtotal` decimal(18,2) NOT NULL DEFAULT '0.00',
   `status` char(5) NOT NULL,
+  `isdeleted` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tagcode` (`tagcode`),
   KEY `FK_tsc_order_mst_profile` (`userid`),
@@ -272,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `tsc_stock` (
   CONSTRAINT `FK_tsc_stock_tsc_order` FOREIGN KEY (`orderdetailid`) REFERENCES `tsc_order_detail` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.tsc_stock: ~0 rows (approximately)
+-- Dumping data for table persediaandb.tsc_stock: ~3 rows (approximately)
 DELETE FROM `tsc_stock`;
 /*!40000 ALTER TABLE `tsc_stock` DISABLE KEYS */;
 INSERT INTO `tsc_stock` (`id`, `itemid`, `orderdetailid`, `currentstock`, `stockdate`, `note`) VALUES
