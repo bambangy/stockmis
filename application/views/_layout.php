@@ -124,9 +124,9 @@
               </span>
             </a>
             <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Add Order</a></li>
+              <li><a href="<?php echo base_url("order/add"); ?>"><i class="fa fa-circle-o"></i> Add Order</a></li>
               <li><a href="#"><i class="fa fa-circle-o"></i> Track Order</a></li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Order List</a></li>
+              <li><a href="<?php echo base_url("order"); ?>"><i class="fa fa-circle-o"></i> Order List</a></li>
             </ul>
           </li>
           <?php } ?>

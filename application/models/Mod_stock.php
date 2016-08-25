@@ -26,7 +26,7 @@ class Mod_stock extends CI_Model{
             array(
                 "field" => "itemname",
                 "label" => "Item",
-                "rules" => "required"
+                "rules" => ""
             ),
             array(
                 "field" => "currentstock",

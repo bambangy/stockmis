@@ -43,4 +43,11 @@ class Stock extends MY_Controller{
     public function track($id){
         
     }
+
+    public function stocklist(){
+        $model = array(
+            "stocklist" => $this->mod_stock->getstocklist()
+        );
+        $this->load->view('stock/modalstocklist', $model);
+    }
 }
