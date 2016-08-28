@@ -1,9 +1,9 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
 -- Server version:               5.7.11 - MySQL Community Server (GPL)
--- Server OS:                    Win64
+-- Server OS:                    Win32
 -- HeidiSQL Version:             9.3.0.4984
--- Last Update:                  25/08/2016 18:38
+-- Last Update                   29/08/2016
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -12,13 +12,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping database structure for persediaandb
-DROP DATABASE IF EXISTS `persediaandb`;
 CREATE DATABASE IF NOT EXISTS `persediaandb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `persediaandb`;
 
 
 -- Dumping structure for table persediaandb.mst_item
-DROP TABLE IF EXISTS `mst_item`;
 CREATE TABLE IF NOT EXISTS `mst_item` (
   `id` char(64) NOT NULL,
   `code` char(15) NOT NULL,
@@ -39,7 +37,6 @@ INSERT INTO `mst_item` (`id`, `code`, `name`, `stockunit`, `isused`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_order_detail_status
-DROP TABLE IF EXISTS `mst_order_detail_status`;
 CREATE TABLE IF NOT EXISTS `mst_order_detail_status` (
   `code` char(10) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -57,7 +54,6 @@ INSERT INTO `mst_order_detail_status` (`code`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_order_status
-DROP TABLE IF EXISTS `mst_order_status`;
 CREATE TABLE IF NOT EXISTS `mst_order_status` (
   `code` char(5) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
@@ -75,7 +71,6 @@ INSERT INTO `mst_order_status` (`code`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_profile
-DROP TABLE IF EXISTS `mst_profile`;
 CREATE TABLE IF NOT EXISTS `mst_profile` (
   `id` char(64) NOT NULL,
   `unitid` char(64) DEFAULT NULL,
@@ -99,7 +94,6 @@ INSERT INTO `mst_profile` (`id`, `unitid`, `name`, `position`, `title`, `nip`) V
 
 
 -- Dumping structure for table persediaandb.mst_role
-DROP TABLE IF EXISTS `mst_role`;
 CREATE TABLE IF NOT EXISTS `mst_role` (
   `id` char(64) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -117,7 +111,6 @@ INSERT INTO `mst_role` (`id`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_supplier
-DROP TABLE IF EXISTS `mst_supplier`;
 CREATE TABLE IF NOT EXISTS `mst_supplier` (
   `id` char(64) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -133,7 +126,6 @@ DELETE FROM `mst_supplier`;
 
 
 -- Dumping structure for table persediaandb.mst_unit
-DROP TABLE IF EXISTS `mst_unit`;
 CREATE TABLE IF NOT EXISTS `mst_unit` (
   `id` char(64) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -151,7 +143,6 @@ INSERT INTO `mst_unit` (`id`, `name`, `code`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_user
-DROP TABLE IF EXISTS `mst_user`;
 CREATE TABLE IF NOT EXISTS `mst_user` (
   `id` char(64) NOT NULL,
   `roleid` char(64) NOT NULL,
@@ -175,7 +166,6 @@ INSERT INTO `mst_user` (`id`, `roleid`, `username`, `hashpassword`, `isactive`) 
 
 
 -- Dumping structure for table persediaandb.tsc_order
-DROP TABLE IF EXISTS `tsc_order`;
 CREATE TABLE IF NOT EXISTS `tsc_order` (
   `id` char(64) NOT NULL,
   `tagcode` char(10) NOT NULL,
@@ -195,11 +185,12 @@ CREATE TABLE IF NOT EXISTS `tsc_order` (
 -- Dumping data for table persediaandb.tsc_order: ~0 rows (approximately)
 DELETE FROM `tsc_order`;
 /*!40000 ALTER TABLE `tsc_order` DISABLE KEYS */;
+INSERT INTO `tsc_order` (`id`, `tagcode`, `userid`, `orderdate`, `itemcount`, `status`, `isdeleted`) VALUES
+	('3C7B9B67-96A4-4792-8BD1-D6EB84FF163A', '#DIO254U', 'a3ebf587-687a-11e6-a763-00aceea37ffa', '2016-08-29 05:11:48', 2, 'PROC', 0);
 /*!40000 ALTER TABLE `tsc_order` ENABLE KEYS */;
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail
-DROP TABLE IF EXISTS `tsc_order_detail`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail` (
   `id` char(64) NOT NULL,
   `orderid` char(64) NOT NULL,
@@ -218,11 +209,13 @@ CREATE TABLE IF NOT EXISTS `tsc_order_detail` (
 -- Dumping data for table persediaandb.tsc_order_detail: ~0 rows (approximately)
 DELETE FROM `tsc_order_detail`;
 /*!40000 ALTER TABLE `tsc_order_detail` DISABLE KEYS */;
+INSERT INTO `tsc_order_detail` (`id`, `orderid`, `itemid`, `total`, `status`) VALUES
+	('A579B648-E8AF-40C1-AEDD-F205398F38E5', '3C7B9B67-96A4-4792-8BD1-D6EB84FF163A', 'BE8F7088-1919-4C3E-A4D9-BABC50EAEDA6', 12.00, 'WT'),
+	('FD2C06E4-A921-40A8-BC2D-AA4D8679E13F', '3C7B9B67-96A4-4792-8BD1-D6EB84FF163A', '34FFE025-A980-463B-BC4A-12F5407B2E5F', 25.00, 'WT');
 /*!40000 ALTER TABLE `tsc_order_detail` ENABLE KEYS */;
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail_return
-DROP TABLE IF EXISTS `tsc_order_detail_return`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail_return` (
   `id` char(64) NOT NULL,
   `reason` text NOT NULL,
@@ -239,7 +232,6 @@ DELETE FROM `tsc_order_detail_return`;
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail_taken
-DROP TABLE IF EXISTS `tsc_order_detail_taken`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail_taken` (
   `id` char(64) NOT NULL,
   `note` text NOT NULL,
@@ -255,7 +247,6 @@ DELETE FROM `tsc_order_detail_taken`;
 
 
 -- Dumping structure for table persediaandb.tsc_stock
-DROP TABLE IF EXISTS `tsc_stock`;
 CREATE TABLE IF NOT EXISTS `tsc_stock` (
   `id` char(64) NOT NULL,
   `itemid` char(64) NOT NULL,
@@ -274,8 +265,10 @@ CREATE TABLE IF NOT EXISTS `tsc_stock` (
 DELETE FROM `tsc_stock`;
 /*!40000 ALTER TABLE `tsc_stock` DISABLE KEYS */;
 INSERT INTO `tsc_stock` (`id`, `itemid`, `orderdetailid`, `currentstock`, `stockdate`, `note`) VALUES
+	('0686E4DB-E98C-40BE-A55D-88ACAA885F67', 'BE8F7088-1919-4C3E-A4D9-BABC50EAEDA6', 'A579B648-E8AF-40C1-AEDD-F205398F38E5', 8.00, '2016-08-29 05:11:48', 'order detail'),
 	('0C82670E-DD54-409A-BD74-181AB36AD573', '34FFE025-A980-463B-BC4A-12F5407B2E5F', NULL, 10.00, '2016-08-25 01:08:40', '<p>stok awal</p>'),
 	('143591A8-FFAC-4708-8763-694837B6AA5F', 'BE8F7088-1919-4C3E-A4D9-BABC50EAEDA6', NULL, 20.00, '2016-08-25 01:10:38', '<p>stock awal</p>'),
+	('4B65B6D5-7500-44BA-89FA-A4E8275810BA', '34FFE025-A980-463B-BC4A-12F5407B2E5F', 'FD2C06E4-A921-40A8-BC2D-AA4D8679E13F', 25.00, '2016-08-29 05:11:48', 'order detail'),
 	('646E3B6D-B2EB-4686-BD29-955B93ABC1D2', '34FFE025-A980-463B-BC4A-12F5407B2E5F', NULL, 50.00, '2016-08-25 01:11:41', '<p>stock kedua</p>');
 /*!40000 ALTER TABLE `tsc_stock` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
