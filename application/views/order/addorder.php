@@ -20,9 +20,18 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Order Information</h3>
                 </div>
-                <form class="form-horizontal" action="<?php echo base_url($form_action); ?>" method="post">
+                <form id="form-order" class="form-horizontal" action="<?php echo base_url($form_action); ?>" method="post">
                     <input type="hidden" name="id" value="<?php echo set_value('id', isset($form_data->id)?$form_data->id : ''); ?>" >
                     <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="btn btn-success" id="search-item"
+                                data-toggle="modal" data-target="#myModal">
+                                    <i class="fa fa-search"></i> Search Item
+                                </span>
+                            </div>
+                        </div>
+                        <br/>
                         <table id="table" class="table table-striped table-hover table-bordered">
                             <thead>
                                 <tr>
@@ -34,6 +43,9 @@
                                 </tr>
                             </thead>
                             <tbody>
+                            <?php
+                                print_r($form_data);
+                            ?>
                             </tbody>
                         </table>
                     </div>
@@ -41,7 +53,7 @@
                     <div class="box-footer">
                         <a href="<?php echo ($edit == true ? base_url('order/view/'.set_value('id', (isset($form_data->id)?$form_data->id : ''))) : base_url('order')); ?>" class="btn btn-default">Cancel</a>
                         <?php if($view == false){ ?>
-                            <button type="submit" class="btn btn-info"><i class="fa fa-floppy-o"></i> Save</button>
+                            <span id="submit-order" class="btn btn-info"><i class="fa fa-floppy-o"></i> Save</span>
                         <?php } ?>
                     </div>
                     <!-- /.box-footer -->
@@ -69,6 +81,16 @@
 </div>
 <script>
 $(function(){
+    $("#submit-order").click(function(){
+        $(this).attr("disabled",true);
+        $(this).html('<i class="fa fa-refresh fa-spin fa-fw" aria-hidden="true"></i><span class="sr-only">Please wait...</span>');
+        if(checktotal()){
+            $("#form-order").submit();
+        }else{
+            $(this).attr("disabled",false);
+            $(this).html('<i class="fa fa-floppy-o"></i> Save');
+        }
+    });
     $("#delete-item").click(function(){
         if(confirm("Sure delete unit ?")){
             $("#delete-form").submit();
@@ -79,28 +101,60 @@ $(function(){
             $("#modal-content").html(result);
         });
     });
+    function checktotal(){
+        var result = true;
+        $("#table > tbody tr").each(function(){
+            if($(this).find("td > input.total").val() <= 0){
+                alert($(this).children("td:first-child").html()+" total must filled. At least 1.");
+                result = false;
+                return false;
+            }
+            if(parseFloat($(this).find("td.limitstock").html()) < $(this).find("td > input.total").val()){
+                alert("Order of "+$(this).children("td:first-child").html()+" can not more than stock limit.");
+                result = false;
+                return false;
+            }
+        });
+        if($("#table > tbody tr").length <= 0){
+            alert("Order must contain at least 1 stock.");
+            return false;
+        }
+        return result;
+    }
 });
 function selectedItem(id,name,currentstock,stockunit){
     if(currentstock != 0){
-        var row = "<tr>";
-        row += "<td>"+name+"</td>";
-        row += '<td>';
-        row += '<input type="number" name="detail.total[]" class="form-control" />';
-        row += '<input type="hidden" name="detail.itemid[]" value="'+id+'" />';
-        row += '<input type="hidden" name="detail.itemname[]" value="'+id+'" />';
-        row += '</td>';
-        row += "<td>"+currentstock+"</td>";
-        row += "<td>"+stockunit+"</td>";
-        row += '<td onClick="deleteitem(this)" style="cursor:pointer;"><i class="fa fa-trash"></i></td>';
-        row += "</tr>";
-        $("#table > tbody").append(row);
+        if(!checkifexists(name)){
+            var row = "<tr>";
+            row += "<td>"+name+"</td>";
+            row += '<td>';
+            row += '<input type="number" name="detail.total[]" class="form-control total" />';
+            row += '<input type="hidden" name="detail.itemid[]" value="'+id+'" />';
+            row += '<input type="hidden" name="detail.itemname[]" value="'+name+'" />';
+            row += '</td>';
+            row += '<td class="limitstock">'+currentstock+"</td>";
+            row += "<td>"+stockunit+"</td>";
+            row += '<td onClick="deleteitem(this)" style="cursor:pointer;"><i class="fa fa-trash"></i></td>';
+            row += "</tr>";
+            $("#table > tbody").append(row);
+        }
     }else{
-        alert("Stock not enough");
+        alert("Stock not enough to ordered");
     }
     $("#modal-content").html('<i class="fa fa-refresh fa-spin fa-3x fa-fw" aria-hidden="true"></i><span class="sr-only">Refreshing...</span>');
     $('#myModal').modal('hide')
 }
 function deleteitem(data){
     $(data).parent("tr").remove();
+}
+function checkifexists(name){
+    var result = false;
+    $("#table > tbody tr").each(function(){
+        if($(this).children("td:first-child").html() === name){
+            alert("Stock already exists");
+            result = true;
+        }
+    });
+    return result;
 }
 </script>

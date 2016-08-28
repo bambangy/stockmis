@@ -2,6 +2,32 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mod_order extends CI_Model{
+    public $message = "";
+    public $data = array(
+        "tagcode" => "",
+        "id" => "",
+        "userid" => "",
+        "orderdate" => "",
+        "itemcount" => "",
+        "grandtotal" => "",
+        "status" => "",
+        "username" => "",
+        "statusname" => "",
+        "details" => array()
+    );
+    public $dataDetails = array(
+        "id" => "",
+        "orderid" => "",
+        "itemid" => "",
+        "total" => "",
+        "status" => "",
+        "itemname" => "",
+        "statusname" => ""
+    );
+    public function __conctruct(){
+        parent::__construct();
+        $this->load->model('mod_stock', 'mod_stock', TRUE);
+    }
 
     public function getorderlist(){
         $query = $this->db->query("select o.`*`, u.name 'username', os.name 'statusname' from tsc_order o 
@@ -47,7 +73,7 @@ class Mod_order extends CI_Model{
 
     public function form_order_rule(){
         $rule = array(
-            array(
+            /*array(
                 "field" => "id",
                 "label" => "id",
                 "rules" => ""
@@ -57,7 +83,7 @@ class Mod_order extends CI_Model{
                 "label" => "tagcode",
                 "rules" => ""
             ),
-            /*array(
+            array(
                 "field" => "itemcount",
                 "label" => "itemcount",
                 "rules" => ""
@@ -66,7 +92,7 @@ class Mod_order extends CI_Model{
                 "field" => "grandtotal",
                 "label" => "grandtotal",
                 "rules" => ""
-            ),*/
+            ),
             array(
                 "field" => "detail.id[]",
                 "label" => "detail.id",
@@ -86,7 +112,7 @@ class Mod_order extends CI_Model{
                 "field" => "detail.total[]",
                 "label" => "Total",
                 "rules" => "required"
-            )
+            )*/
         );
         return $rule;
     }
@@ -131,17 +157,43 @@ class Mod_order extends CI_Model{
                 "orderid" => "",
                 "itemid" => $this->input->post("detail.itemid[]")[$i],
                 "total" => $this->input->post("detail.total[]")[$i],
-                "status" => "WT"
+                "status" => "WT",
+                "itemname" => $this->input->post("detail.itemname[]")[$i]
             );
         }
         return $datas;
     }
 
+    public function populatetoform(){
+        $data = $this->populatedetails();
+        $i = 0;
+        foreach($details as $row){
+            $this->data["details"][$i] = array(
+                "id" => "",
+                "orderid" => "",
+                "itemid" => $row->itemid,
+                "total" => $row->total,
+                "status" => $row->status,
+                "itemname" => $row->itemname,
+                "statusname" => ""
+            );
+            $i++;
+        }
+        return $this->data;
+    }
+
     public function validate_stock(){
         $data = $this->populatedetails();
-        foreach($details as $row){
-            $stockenough = $this->isstockenough($row->itemid,$row->total);
-            if($stockenough == false){
+        foreach($data as $row){
+            $stockData = $this->mod_stock->getstock($row->id);
+            if($row->total > 0){
+                $stockenough = $this->isstockenough($row->itemid,$row->total);
+                if($stockenough == false){
+                    $this->message = "Stock of ".$stockData->itemname." not enough.";
+                    return false;
+                }
+            }else{
+                $this->message = "Order of item ".$stockData->itemname." must filled, at least 1.";
                 return false;
             }
         }
