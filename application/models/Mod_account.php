@@ -45,6 +45,7 @@ class Mod_account extends CI_Model{
             $firstOrDefault = $query->row(0);
             if (password_verify($password, $firstOrDefault->hashpassword)) {
                 $data = array(
+                    "userid" => $firstOrDefault->id,
                     "username" => $firstOrDefault->username,
                     "role" => $firstOrDefault->role,
                     "name"=> $firstOrDefault->name,
@@ -63,6 +64,7 @@ class Mod_account extends CI_Model{
 
     public function logout(){
         $this->session->unset_userdata(array(
+            "userid" => "",
             "username" => "",
             "role" => "",
             "name"=> "",

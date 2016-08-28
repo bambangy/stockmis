@@ -66,7 +66,7 @@ class Mod_stock extends CI_Model{
     }
 
     public function getstock($id){
-        $query = $this->db->query("select s.*, i.itemname from tsc_stock s
+        $query = $this->db->query("select s.*, i.name from tsc_stock s
         join mst_item i on s.itemid = i.id 
         where i.id = '".$id."' order by s.stockdate desc limit 1");
         if($query->num_rows() == 1){

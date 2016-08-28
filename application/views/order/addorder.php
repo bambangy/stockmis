@@ -44,7 +44,23 @@
                             </thead>
                             <tbody>
                             <?php
-                                print_r($form_data);
+                                foreach($form_data["details"] as $row){
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $row["itemname"]; ?></td>
+                                        <td>
+                                            <input type="number" name="detailtotal[]" value="<?php echo $row["total"]; ?>" class="form-control total" />
+                                            <input type="hidden" name="detailitemid[]" value="<?php echo $row["itemid"]; ?>" />
+                                            <input type="hidden" name="detailitemname[]" value="<?php echo $row["itemname"]; ?>" />
+                                            <input type="hidden" name="detailitemlimit[]" value="<?php echo $row["limit"]; ?>" />
+                                            <input type="hidden" name="detailitemunit[]" value="<?php echo $row["unit"]; ?>" />
+                                        </td>
+                                        <td class="limitstock"><?php echo $row["limit"]; ?></td>
+                                        <td><?php echo $row["unit"]; ?></td>
+                                        <td onClick="deleteitem(this)" style="cursor:pointer;"><i class="fa fa-trash"></i></td>
+                                    </tr>
+                                    <?php
+                                }
                             ?>
                             </tbody>
                         </table>
@@ -128,9 +144,11 @@ function selectedItem(id,name,currentstock,stockunit){
             var row = "<tr>";
             row += "<td>"+name+"</td>";
             row += '<td>';
-            row += '<input type="number" name="detail.total[]" class="form-control total" />';
-            row += '<input type="hidden" name="detail.itemid[]" value="'+id+'" />';
-            row += '<input type="hidden" name="detail.itemname[]" value="'+name+'" />';
+            row += '<input type="number" name="detailtotal[]" class="form-control total" />';
+            row += '<input type="hidden" name="detailitemid[]" value="'+id+'" />';
+            row += '<input type="hidden" name="detailitemname[]" value="'+name+'" />';
+            row += '<input type="hidden" name="detailitemlimit[]" value="'+currentstock+'" />';
+            row += '<input type="hidden" name="detailitemunit[]" value="'+stockunit+'" />';
             row += '</td>';
             row += '<td class="limitstock">'+currentstock+"</td>";
             row += "<td>"+stockunit+"</td>";

@@ -26,7 +26,6 @@ class Mod_order extends CI_Model{
     );
     public function __conctruct(){
         parent::__construct();
-        $this->load->model('mod_stock', 'mod_stock', TRUE);
     }
 
     public function getorderlist(){
@@ -56,7 +55,7 @@ class Mod_order extends CI_Model{
     }
 
     public function isstockenough($itemid, $stockrequested){
-        $query = $this->db->query("select s.*, i.itemname from tsc_stock s
+        $query = $this->db->query("select s.*, i.name from tsc_stock s
         join mst_item i on s.itemid = i.id 
         where i.id = '".$itemid."' order by s.stockdate desc limit 1");
         if($query->num_rows() == 1){
@@ -136,30 +135,39 @@ class Mod_order extends CI_Model{
             $id = $this->guid->newid();
         }
         $query = $this->db->query("select * from tsc_order where id = '".$id."' limit 1;");
-        $details =$this->populatedetails();
+        $details = $this->populatedetails();
         if($query->num_rows() == 0){
-            $saveorder = $this->db->query("insert into tsc_order(id,tagcode,userid,itemcount,status,isdelete) 
-                values('".$id."','".$this->tagid->newid()."','".$this->input->post("userid")."',
+            $saveorder = $this->db->query("insert into tsc_order(id,tagcode,userid,itemcount,status,isdeleted) 
+                values('".$id."','".$this->tagid->newid(8)."','".$this->session->userdata("userid")."',
                 ".count($details).",'PROC',0)");
             foreach($details as $row){
+                $stockData = $this->getstock($row["itemid"]);
+
                 $savedetail = $this->db->query("insert into tsc_order_detail(id,orderid,itemid,total,status)
-                values('".$row->id."','".$id."','".$row->itemid."',".$row->total.",'".$row->status."')");
+                values('".$row["id"]."','".$id."','".$row["itemid"]."',".$row["total"].",'".$row["status"]."')");
+
+                $this->db->query("insert into tsc_stock(id, itemid, currentstock, orderdetailid, note) 
+                values('".$this->guid->newid()."', '".$row["itemid"]."', ".($stockData->currentstock - $row["total"]).",
+                '".$row["id"]."','order detail')");
             }
         }
     }
 
     public function populatedetails(){
-        $iterasi = count($this->input->post("detail.id[]"));
         $datas = array();
-        for($i = 0; $i < $iterasi; $i++){
+        $i = 0;
+        foreach($this->input->post("detailitemid[]") as $row){
             $datas[$i] = array(
                 "id" => $this->guid->newid(),
                 "orderid" => "",
-                "itemid" => $this->input->post("detail.itemid[]")[$i],
-                "total" => $this->input->post("detail.total[]")[$i],
+                "itemid" => $this->input->post("detailitemid[]")[$i],
+                "total" => $this->input->post("detailtotal[]")[$i],
                 "status" => "WT",
-                "itemname" => $this->input->post("detail.itemname[]")[$i]
+                "itemname" => $this->input->post("detailitemname[]")[$i],
+                "limit" => $this->input->post("detailitemlimit[]")[$i],
+                "unit" => $this->input->post("detailitemunit[]")[$i]
             );
+            $i++;
         }
         return $datas;
     }
@@ -167,15 +175,18 @@ class Mod_order extends CI_Model{
     public function populatetoform(){
         $data = $this->populatedetails();
         $i = 0;
-        foreach($details as $row){
+        foreach($data as $row){
+            $stockData = $this->getstock($row["itemid"]);
             $this->data["details"][$i] = array(
                 "id" => "",
                 "orderid" => "",
-                "itemid" => $row->itemid,
-                "total" => $row->total,
-                "status" => $row->status,
-                "itemname" => $row->itemname,
-                "statusname" => ""
+                "itemid" => $row["itemid"],
+                "total" => $row["total"],
+                "status" => $row["status"],
+                "itemname" => $row["itemname"],
+                "statusname" => "",
+                "limit" => $stockData->currentstock,
+                "unit" => $row["unit"]
             );
             $i++;
         }
@@ -185,18 +196,29 @@ class Mod_order extends CI_Model{
     public function validate_stock(){
         $data = $this->populatedetails();
         foreach($data as $row){
-            $stockData = $this->mod_stock->getstock($row->id);
-            if($row->total > 0){
-                $stockenough = $this->isstockenough($row->itemid,$row->total);
+            $stockData = $this->getstock($row["itemid"]);
+            if($row["total"] > 0){
+                $stockenough = $this->isstockenough($row["itemid"],$row["total"]);
                 if($stockenough == false){
-                    $this->message = "Stock of ".$stockData->itemname." not enough.";
+                    $this->message = "Stock of ".$stockData->name." not enough.";
                     return false;
                 }
             }else{
-                $this->message = "Order of item ".$stockData->itemname." must filled, at least 1.";
+                $this->message = "Order of item ".$stockData->name." must filled, at least 1.";
                 return false;
             }
         }
         return true;
+    }
+
+    public function getstock($id){
+        $query = $this->db->query("select s.*, i.name from tsc_stock s
+        join mst_item i on s.itemid = i.id 
+        where i.id = '".$id."' order by s.stockdate desc limit 1");
+        if($query->num_rows() == 1){
+            return $query->row(0);
+        }else{
+            return null;
+        }
     }
 }
