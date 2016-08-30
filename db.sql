@@ -1,9 +1,9 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
 -- Server version:               5.7.11 - MySQL Community Server (GPL)
--- Server OS:                    Win64
+-- Server OS:                    Win32
 -- HeidiSQL Version:             9.3.0.4984
--- Last Update                   30/08/2016
+-- Last Update                   30/08/2016 22:40
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -17,24 +17,51 @@ CREATE DATABASE IF NOT EXISTS `persediaandb` /*!40100 DEFAULT CHARACTER SET lati
 USE `persediaandb`;
 
 
+-- Dumping structure for table persediaandb.mst_category
+DROP TABLE IF EXISTS `mst_category`;
+CREATE TABLE IF NOT EXISTS `mst_category` (
+  `id` char(64) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `parent` char(64) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_mst_category_mst_category` (`parent`),
+  CONSTRAINT `FK_mst_category_mst_category` FOREIGN KEY (`parent`) REFERENCES `mst_category` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dumping data for table persediaandb.mst_category: ~0 rows (approximately)
+DELETE FROM `mst_category`;
+/*!40000 ALTER TABLE `mst_category` DISABLE KEYS */;
+INSERT INTO `mst_category` (`id`, `name`, `parent`) VALUES
+	('42364930-6EF1-4F8C-B8B1-08BEC05CBB5C', 'Cleaning Tool', NULL),
+	('6A12FB94-C8D9-4400-BE98-B2851DEE1573', 'Stationery', NULL),
+	('86A391CA-FC39-4DC9-9174-1322B3C61CDA', 'Healthy Tools', NULL),
+	('A7AF4D2E-6D7E-4B56-B67B-518926E8A81A', 'Drugs', NULL);
+/*!40000 ALTER TABLE `mst_category` ENABLE KEYS */;
+
+
 -- Dumping structure for table persediaandb.mst_item
 DROP TABLE IF EXISTS `mst_item`;
 CREATE TABLE IF NOT EXISTS `mst_item` (
   `id` char(64) NOT NULL,
+  `categoryid` char(64) DEFAULT NULL,
   `code` char(15) NOT NULL,
   `name` varchar(100) NOT NULL,
   `stockunit` varchar(25) NOT NULL COMMENT 'unit untuk stock, bisa kg, litter, pcs dll',
   `isused` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `FK_mst_item_mst_category` (`categoryid`),
+  CONSTRAINT `FK_mst_item_mst_category` FOREIGN KEY (`categoryid`) REFERENCES `mst_category` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Barang';
 
 -- Dumping data for table persediaandb.mst_item: ~3 rows (approximately)
 DELETE FROM `mst_item`;
 /*!40000 ALTER TABLE `mst_item` DISABLE KEYS */;
-INSERT INTO `mst_item` (`id`, `code`, `name`, `stockunit`, `isused`) VALUES
-	('34FFE025-A980-463B-BC4A-12F5407B2E5F', '', 'Kain Kasa', 'Pack', 1),
-	('806E3621-C45E-409E-B9E5-B67A9F1947F4', '', 'Infus', 'PCS', 1),
-	('BE8F7088-1919-4C3E-A4D9-BABC50EAEDA6', '', 'Pampers', 'PCS', 1);
+INSERT INTO `mst_item` (`id`, `categoryid`, `code`, `name`, `stockunit`, `isused`) VALUES
+	('34FFE025-A980-463B-BC4A-12F5407B2E5F', '86A391CA-FC39-4DC9-9174-1322B3C61CDA', '', 'Kain Kasa', 'Pack', 1),
+	('806E3621-C45E-409E-B9E5-B67A9F1947F4', '86A391CA-FC39-4DC9-9174-1322B3C61CDA', '', 'Infus', 'PCS', 1),
+	('B06C98C3-9CD2-4B9E-BC2F-91CF3F716966', '42364930-6EF1-4F8C-B8B1-08BEC05CBB5C', '', 'Harpic', 'PCS', 1),
+	('BC816C4C-6AC0-422D-8F12-00A0FCFC0C4F', '6A12FB94-C8D9-4400-BE98-B2851DEE1573', '', 'Paper A4 Sidu', 'Pack', 1),
+	('BE8F7088-1919-4C3E-A4D9-BABC50EAEDA6', '86A391CA-FC39-4DC9-9174-1322B3C61CDA', '', 'Pampers', 'PCS', 1);
 /*!40000 ALTER TABLE `mst_item` ENABLE KEYS */;
 
 
@@ -218,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `tsc_order_detail` (
   CONSTRAINT `FK_tsc_order_detail_mst_order_detail_status` FOREIGN KEY (`status`) REFERENCES `mst_order_detail_status` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.tsc_order_detail: ~4 rows (approximately)
+-- Dumping data for table persediaandb.tsc_order_detail: ~3 rows (approximately)
 DELETE FROM `tsc_order_detail`;
 /*!40000 ALTER TABLE `tsc_order_detail` DISABLE KEYS */;
 INSERT INTO `tsc_order_detail` (`id`, `orderid`, `itemid`, `total`, `status`) VALUES
@@ -277,7 +304,7 @@ CREATE TABLE IF NOT EXISTS `tsc_stock` (
   CONSTRAINT `FK_tsc_stock_tsc_order` FOREIGN KEY (`orderdetailid`) REFERENCES `tsc_order_detail` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.tsc_stock: ~9 rows (approximately)
+-- Dumping data for table persediaandb.tsc_stock: ~8 rows (approximately)
 DELETE FROM `tsc_stock`;
 /*!40000 ALTER TABLE `tsc_stock` DISABLE KEYS */;
 INSERT INTO `tsc_stock` (`id`, `itemid`, `orderdetailid`, `currentstock`, `stockdate`, `note`) VALUES
