@@ -67,6 +67,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Category</label>
+                                    <div class="col-sm-10">
+                                        <?php echo form_dropdown('catid', $catoptions, 
+                                        set_value('catid', isset($form_data->catid)?$form_data->catid : ''), 
+                                        'class="form-control" '.($view == true ? "disabled" : "" ).' required'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">

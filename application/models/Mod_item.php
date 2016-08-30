@@ -14,13 +14,27 @@ class Mod_item extends CI_Model{
         );
     }
 
+    public function catoptionlist(){
+        $query = $this->db->query("
+            select * from mst_category
+        ");
+
+        $list = array(
+            "" => "Select Category"
+        );
+        foreach($query->result() as $row){
+            $list[$row->id] = $row->name;
+        }
+        return $list;
+    }
+
     public function getitemlist(){
-        $query = $this->db->query("select * from mst_item");
+        $query = $this->db->query("select i.*, c.name 'catname' from mst_item i left join mst_category c on i.categoryid  = c.id");
         return $query->result();
     }
 
     public function getitemlist2(){
-        $query = $this->db->query("select * from mst_item where isused = 1");
+        $query = $this->db->query("select i.*, c.name 'catname' from mst_item i left join mst_category c on i.categoryid  = c.id where isused = 1");
         return $query->result();
     }
 
@@ -35,6 +49,11 @@ class Mod_item extends CI_Model{
                 "field" => "code",
                 "label" => "Code",
                 "rules" => ""
+            ),
+            array(
+                "field" => "catid",
+                "label" => "Category",
+                "rules" => "required"
             ),
             array(
                 "field" => "name",
@@ -94,12 +113,13 @@ class Mod_item extends CI_Model{
         }
         $check = $this->db->query("select * from mst_item where id = '".$id."'");
         if($check->num_rows() == 0){
-            $this->db->query("insert into mst_item(id, code, name, stockunit, isused) 
-            values('".$id."', '".$this->input->post('code')."', '".$this->input->post('name')."'
+            $this->db->query("insert into mst_item(id, categoryid, code, name, stockunit, isused) 
+            values('".$id."', '".$this->input->post('catid')."','".$this->input->post('code')."', '".$this->input->post('name')."'
             , '".$this->input->post('stockunit')."', ".$this->input->post('isused').")");
         }else{
             $this->db->query("update mst_item set  
                 code = '".$this->input->post('code')."', 
+                categoryid = '".$this->input->post('catid')."', 
                 name =  '".$this->input->post('name')."',
                 stockunit = '".$this->input->post('stockunit')."',
                 isused = ".$this->input->post('isused')."

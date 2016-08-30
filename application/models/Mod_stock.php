@@ -6,7 +6,8 @@ class Mod_stock extends CI_Model{
     public function getstocklist(){
         $query = $this->db->query("select i.*, 
         coalesce((select s.currentstock from tsc_stock s where s.itemid = i.id order by s.stockdate desc limit 1),0) 'currentstock',
-        coalesce((select s.stockdate from tsc_stock s where s.itemid = i.id order by s.stockdate desc limit 1),current_timestamp()) 'stockdate'
+        coalesce((select s.stockdate from tsc_stock s where s.itemid = i.id order by s.stockdate desc limit 1),current_timestamp()) 'stockdate',
+        (select c.name from mst_category c where c.id = i.categoryid) 'catname'
         from mst_item  i where i.isused = 1");
         return $query->result();
     }

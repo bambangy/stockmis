@@ -153,6 +153,17 @@
             </a>
             <ul class="treeview-menu">
               <li>
+                <a href="#"><i class="fa fa-circle-o"></i> Category
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <li><a href="<?php echo base_url("category/add"); ?>"><i class="fa fa-circle-o"></i> Add Category</a></li>
+                  <li><a href="<?php echo base_url("category"); ?>"><i class="fa fa-circle-o"></i> Category List</a></li>
+                </ul>
+              </li>
+              <li>
                 <a href="#"><i class="fa fa-circle-o"></i> Item
                   <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>

@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Category</th>
             <th>Code</th>
             <th>Item Piece</th>
         </tr>
@@ -13,6 +14,7 @@
                 <tr onClick="selectedItem('<?php echo $row->id; ?>', '<?php echo $row->name; ?>', 
                 '<?php echo $row->code; ?>', '<?php echo $row->stockunit; ?>');" style="cursor:pointer;">
                     <td><?php echo $row->name; ?></td>
+                    <td><?php echo $row->catname; ?></td>
                     <td><?php echo $row->code; ?></td>
                     <td><?php echo $row->stockunit; ?></td>
                 </tr>

@@ -23,6 +23,7 @@
                     <table id="table" class="table table-hover table-strip">
                         <thead>
                             <tr>
+                                <th>Category</th>
                                 <th>Item Name</th>
                                 <th>Current Stock</th>
                                 <th>Item Piece</th>
@@ -34,6 +35,7 @@
                                 foreach($stocklist as $row){
                                     ?>
                                     <tr>
+                                        <td><?php echo $row->catname; ?></td>
                                         <td><?php echo $row->name; ?></td>
                                         <td><?php echo $row->currentstock; ?></td>
                                         <td><?php echo $row->stockunit; ?></td>
