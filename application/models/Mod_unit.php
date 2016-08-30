@@ -8,7 +8,7 @@ class Mod_unit extends CI_Model{
         return $query->result();
     }
 
-    public function form_user_rule(){
+    public function form_unit_rule(){
         $rule = array(
             array(
                 "field" => "id",
@@ -31,7 +31,7 @@ class Mod_unit extends CI_Model{
 
     // Validation for add form
     public function validate(){
-        $form = $this->form_user_rule();
+        $form = $this->form_unit_rule();
         $this->form_validation->set_rules($form);
         if($this->form_validation->run()){
             return TRUE;

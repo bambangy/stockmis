@@ -99,7 +99,7 @@ class Unit extends MY_Controller{
                 $this->model["data"]["form_data"] = $userdata;
                 $this->load->view("_layout", $this->model);
             }else{
-                $this->session->set_flashdata('message', 'User not found');
+                $this->session->set_flashdata('message', 'Unit not found');
                 $this->session->set_flashdata('messageType', 'warning');
                 redirect('unit');
             }

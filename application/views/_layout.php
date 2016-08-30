@@ -1,3 +1,4 @@
+<?php $role = $this->session->userdata("role"); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,6 +36,7 @@
 <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js'); ?>"></script>
 <!-- AdminLTE App -->
 <script src="<?php echo base_url('assets/plugins/adminlte/js/app.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/plugins/tinymce/tinymce.min.js'); ?>"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
@@ -96,6 +98,7 @@
               <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             </a>
           </li>
+          <?php if( $role == "Admin" || $role == "Matkes"){ ?>
           <li class="treeview">
             <a href="#">
               <i class="fa fa-cube"></i>
@@ -105,11 +108,13 @@
               </span>
             </a>
             <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Add Stock</a></li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Track Stock</a></li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Stock List</a></li>
+              <li><a href="<?php echo base_url("stock/add"); ?>"><i class="fa fa-circle-o"></i> Add Stock</a></li>
+              <!--<li><a href="<?php echo base_url("stock/track"); ?>"><i class="fa fa-circle-o"></i> Track Stock</a></li>-->
+              <li><a href="<?php echo base_url("stock"); ?>"><i class="fa fa-circle-o"></i> Stock List</a></li>
             </ul>
           </li>
+          <?php } ?>
+          <?php if( $role == "Admin" || $role == "Unit"){ ?>
           <li class="treeview">
             <a href="#">
               <i class="fa fa-shopping-cart"></i>
@@ -119,11 +124,13 @@
               </span>
             </a>
             <ul class="treeview-menu">
-              <li><a href="#"><i class="fa fa-circle-o"></i> Add Order</a></li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Track Order</a></li>
-              <li><a href="#"><i class="fa fa-circle-o"></i> Order List</a></li>
+              <li><a href="<?php echo base_url("order/add"); ?>"><i class="fa fa-circle-o"></i> Add Order</a></li>
+              <!--<li><a href="#"><i class="fa fa-circle-o"></i> Track Order</a></li>-->
+              <li><a href="<?php echo base_url("order"); ?>"><i class="fa fa-circle-o"></i> Order List</a></li>
             </ul>
           </li>
+          <?php } ?>
+          <?php if( $role == "Admin"){ ?>
           <li class="treeview">
             <a href="#">
               <i class="fa fa-flag"></i>
@@ -152,8 +159,8 @@
                   </span>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Add Item</a></li>
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Item List</a></li>
+                  <li><a href="<?php echo base_url("item/add"); ?>"><i class="fa fa-circle-o"></i> Add Item</a></li>
+                  <li><a href="<?php echo base_url("item"); ?>"><i class="fa fa-circle-o"></i> Item List</a></li>
                 </ul>
               </li>
               <li>
@@ -191,6 +198,7 @@
               </li>
             </ul>
           </li>
+          <?php } ?>
         </ul>
       </section>
       <!-- /.sidebar -->
@@ -239,5 +247,20 @@
         }
     ?>
 </div>
+<script>
+  $(function(){
+      tinymce.init({
+          selector: 'textarea',
+          selector: 'textarea',
+          plugins: [
+              'advlist autolink lists link image charmap print preview anchor',
+              'searchreplace visualblocks code fullscreen',
+              'insertdatetime media table contextmenu paste code'
+          ],
+          //toolbar: false,
+          menubar: 'tools'
+      });
+  });
+</script>
 </body>
 </html>
