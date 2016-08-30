@@ -180,10 +180,12 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<?php if($view == true){ ?>
 <form action="<?php echo base_url("order/delete/"); ?>" method="post" id="delete-form">
     <input type="hidden" name="id" value="<?php echo $form_data->id; ?>">
 </form>
 <?php
+    }
     if($view = true){
         ?>
 <link rel="stylesheet" href="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.css'); ?>">
