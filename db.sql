@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
 -- Server version:               5.7.11 - MySQL Community Server (GPL)
--- Server OS:                    Win32
+-- Server OS:                    Win64
 -- HeidiSQL Version:             9.3.0.4984
 -- Last Update                   30/08/2016
 -- --------------------------------------------------------
@@ -12,11 +12,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping database structure for persediaandb
+DROP DATABASE IF EXISTS `persediaandb`;
 CREATE DATABASE IF NOT EXISTS `persediaandb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `persediaandb`;
 
 
 -- Dumping structure for table persediaandb.mst_item
+DROP TABLE IF EXISTS `mst_item`;
 CREATE TABLE IF NOT EXISTS `mst_item` (
   `id` char(64) NOT NULL,
   `code` char(15) NOT NULL,
@@ -37,6 +39,7 @@ INSERT INTO `mst_item` (`id`, `code`, `name`, `stockunit`, `isused`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_order_detail_status
+DROP TABLE IF EXISTS `mst_order_detail_status`;
 CREATE TABLE IF NOT EXISTS `mst_order_detail_status` (
   `code` char(10) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -54,6 +57,7 @@ INSERT INTO `mst_order_detail_status` (`code`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_order_status
+DROP TABLE IF EXISTS `mst_order_status`;
 CREATE TABLE IF NOT EXISTS `mst_order_status` (
   `code` char(5) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
@@ -71,6 +75,7 @@ INSERT INTO `mst_order_status` (`code`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_profile
+DROP TABLE IF EXISTS `mst_profile`;
 CREATE TABLE IF NOT EXISTS `mst_profile` (
   `id` char(64) NOT NULL,
   `unitid` char(64) DEFAULT NULL,
@@ -94,6 +99,7 @@ INSERT INTO `mst_profile` (`id`, `unitid`, `name`, `position`, `title`, `nip`) V
 
 
 -- Dumping structure for table persediaandb.mst_role
+DROP TABLE IF EXISTS `mst_role`;
 CREATE TABLE IF NOT EXISTS `mst_role` (
   `id` char(64) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -111,6 +117,7 @@ INSERT INTO `mst_role` (`id`, `name`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_supplier
+DROP TABLE IF EXISTS `mst_supplier`;
 CREATE TABLE IF NOT EXISTS `mst_supplier` (
   `id` char(64) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -126,6 +133,7 @@ DELETE FROM `mst_supplier`;
 
 
 -- Dumping structure for table persediaandb.mst_unit
+DROP TABLE IF EXISTS `mst_unit`;
 CREATE TABLE IF NOT EXISTS `mst_unit` (
   `id` char(64) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -143,6 +151,7 @@ INSERT INTO `mst_unit` (`id`, `name`, `code`) VALUES
 
 
 -- Dumping structure for table persediaandb.mst_user
+DROP TABLE IF EXISTS `mst_user`;
 CREATE TABLE IF NOT EXISTS `mst_user` (
   `id` char(64) NOT NULL,
   `roleid` char(64) NOT NULL,
@@ -166,6 +175,7 @@ INSERT INTO `mst_user` (`id`, `roleid`, `username`, `hashpassword`, `isactive`) 
 
 
 -- Dumping structure for table persediaandb.tsc_order
+DROP TABLE IF EXISTS `tsc_order`;
 CREATE TABLE IF NOT EXISTS `tsc_order` (
   `id` char(64) NOT NULL,
   `tagcode` char(10) NOT NULL,
@@ -182,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `tsc_order` (
   CONSTRAINT `FK_tsc_order_mst_profile` FOREIGN KEY (`userid`) REFERENCES `mst_profile` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.tsc_order: ~1 rows (approximately)
+-- Dumping data for table persediaandb.tsc_order: ~2 rows (approximately)
 DELETE FROM `tsc_order`;
 /*!40000 ALTER TABLE `tsc_order` DISABLE KEYS */;
 INSERT INTO `tsc_order` (`id`, `tagcode`, `userid`, `orderdate`, `itemcount`, `status`, `isdeleted`) VALUES
@@ -192,6 +202,7 @@ INSERT INTO `tsc_order` (`id`, `tagcode`, `userid`, `orderdate`, `itemcount`, `s
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail
+DROP TABLE IF EXISTS `tsc_order_detail`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail` (
   `id` char(64) NOT NULL,
   `orderid` char(64) NOT NULL,
@@ -207,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `tsc_order_detail` (
   CONSTRAINT `FK_tsc_order_detail_mst_order_detail_status` FOREIGN KEY (`status`) REFERENCES `mst_order_detail_status` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.tsc_order_detail: ~2 rows (approximately)
+-- Dumping data for table persediaandb.tsc_order_detail: ~4 rows (approximately)
 DELETE FROM `tsc_order_detail`;
 /*!40000 ALTER TABLE `tsc_order_detail` DISABLE KEYS */;
 INSERT INTO `tsc_order_detail` (`id`, `orderid`, `itemid`, `total`, `status`) VALUES
@@ -218,6 +229,7 @@ INSERT INTO `tsc_order_detail` (`id`, `orderid`, `itemid`, `total`, `status`) VA
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail_return
+DROP TABLE IF EXISTS `tsc_order_detail_return`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail_return` (
   `id` char(64) NOT NULL,
   `reason` text NOT NULL,
@@ -234,6 +246,7 @@ DELETE FROM `tsc_order_detail_return`;
 
 
 -- Dumping structure for table persediaandb.tsc_order_detail_taken
+DROP TABLE IF EXISTS `tsc_order_detail_taken`;
 CREATE TABLE IF NOT EXISTS `tsc_order_detail_taken` (
   `id` char(64) NOT NULL,
   `note` text NOT NULL,
@@ -249,6 +262,7 @@ DELETE FROM `tsc_order_detail_taken`;
 
 
 -- Dumping structure for table persediaandb.tsc_stock
+DROP TABLE IF EXISTS `tsc_stock`;
 CREATE TABLE IF NOT EXISTS `tsc_stock` (
   `id` char(64) NOT NULL,
   `itemid` char(64) NOT NULL,
@@ -263,7 +277,7 @@ CREATE TABLE IF NOT EXISTS `tsc_stock` (
   CONSTRAINT `FK_tsc_stock_tsc_order` FOREIGN KEY (`orderdetailid`) REFERENCES `tsc_order_detail` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table persediaandb.tsc_stock: ~5 rows (approximately)
+-- Dumping data for table persediaandb.tsc_stock: ~9 rows (approximately)
 DELETE FROM `tsc_stock`;
 /*!40000 ALTER TABLE `tsc_stock` DISABLE KEYS */;
 INSERT INTO `tsc_stock` (`id`, `itemid`, `orderdetailid`, `currentstock`, `stockdate`, `note`) VALUES
