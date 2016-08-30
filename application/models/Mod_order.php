@@ -31,22 +31,22 @@ class Mod_order extends CI_Model{
     public function getorderlist(){
         $query = $this->db->query("select o.`*`, u.name 'username', os.name 'statusname' from tsc_order o 
         join mst_profile u on o.userid = u.id 
-        join mst_order_status os on o.`status` = os.code");
+        join mst_order_status os on o.`status` = os.code".($this->session->userdata("role") == "Admin" ? ";" : " where userid='".$this->session->userdata("userid")."' and isdeleted = 0;" ));
         return $query->result();
     }
 
     public function getorder($id){
         $query = $this->db->query("select o.`*`, u.name 'username', os.name 'statusname' from tsc_order o 
         join mst_profile u on o.userid = u.id 
-        join mst_order_status os on o.`status` = os.code where tsc.id ='".$id."' limit 1;");
+        join mst_order_status os on o.`status` = os.code where o.id ='".$id."' limit 1;");
         if($query->num_rows() == 1){
             $data = $query->row(0);
-            $data["details"] = array();
-            $query2 = $this->db->query("select od.`*`, i.name 'itemname', ods.name 'statusname' from tsc_order_detail od
+            $query2 = $this->db->query("select od.`*`, i.stockunit 'piece', i.name 'itemname', ods.name 'statusname' 
+            from tsc_order_detail od
             join mst_item i on od.itemid = i.id
-            join mst_order_detail_status ods on od.`status` = ods.code where od.orderid = '".$data->id."'");
+            join mst_order_detail_status ods on od.`status` = ods.code where od.orderid = '".$data->id."';");
             if($query2->num_rows() > 0){
-                $data["details"] = $query2->result();
+                $data->details = $query2->result();
             }
             return $data;
         }else{
@@ -149,6 +149,60 @@ class Mod_order extends CI_Model{
                 $this->db->query("insert into tsc_stock(id, itemid, currentstock, orderdetailid, note) 
                 values('".$this->guid->newid()."', '".$row["itemid"]."', ".($stockData->currentstock - $row["total"]).",
                 '".$row["id"]."','order detail')");
+            }
+        }
+    }
+
+    public function cancelorder($id){
+        $query = $this->db->query("update tsc_order set
+        status = 'CANCE'
+        where id = '".$id."';");
+        $query2 = $this->db->query("select od.`*`, i.stockunit 'piece', i.name 'itemname', ods.name 'statusname' 
+        from tsc_order_detail od
+        join mst_item i on od.itemid = i.id
+        join mst_order_detail_status ods on od.`status` = ods.code where od.orderid = '".$id."';");
+        if($query2->num_rows() > 0){
+            foreach($query2->result() as $row){
+                $stockData = $this->getstock($row->itemid);
+                $this->db->query("insert into tsc_stock(id, itemid, currentstock, orderdetailid, note) 
+                values('".$this->guid->newid()."', '".$row->itemid."', ".($stockData->currentstock + $row->total).",
+                '".$row->id."','order detail')");
+            }
+        }
+    }
+
+    public function deleteorder($id){
+        $query = $this->db->query("update tsc_order set
+        isdeleted = 1
+        where id = '".$id."';");
+        $query2 = $this->db->query("select od.`*`, i.stockunit 'piece', i.name 'itemname', ods.name 'statusname' 
+        from tsc_order_detail od
+        join mst_item i on od.itemid = i.id
+        join mst_order_detail_status ods on od.`status` = ods.code
+        join tsc_order o on o.id = od.orderid where od.orderid = '".$id."' and (o.status <> 'CANCE' and o.status <> 'DONE');");
+        if($query2->num_rows() > 0){
+            foreach($query2->result() as $row){
+                $stockData = $this->getstock($row->itemid);
+                $this->db->query("insert into tsc_stock(id, itemid, currentstock, orderdetailid, note) 
+                values('".$this->guid->newid()."', '".$row->itemid."', ".($stockData->currentstock + $row->total).",
+                '".$row->id."','order detail')");
+            }
+        }
+    }
+
+    public function takeorder($id){
+        $this->db->query("update tsc_order_detail set
+        status = 'ST'
+        where id='".$id."';");
+        $query = $this->db->query("select * from tsc_order_detail where id = '".$id."' limit 1;");
+        if($query->num_rows() == 1){
+            $data = $query->row(0);
+            $query1 = $this->db->query("select * from tsc_order_detail where orderid = '".$data->orderid."';");
+            $query2 = $this->db->query("select * from tsc_order_detail where orderid = '".$data->orderid."' and status = 'ST';");
+            if($query1->num_rows() == $query2->num_rows()){
+                $this->db->query("update tsc_order set
+                status = 'DONE'
+                where id = '".$data->orderid."';");
             }
         }
     }

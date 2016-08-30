@@ -24,11 +24,11 @@
                         <thead>
                             <tr>
                                 <th>Tag Code</th>
-                                <th>Username</th>
                                 <th>Item Ordered</th>
                                 <th>Process Status</th>
                                 <th>Data Status</th>
                                 <th>Order Date</th>
+                                <th>Ordered By</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,14 +36,12 @@
                                 foreach($orderlist as $row){
                                     ?>
                                     <tr>
-                                        <a href="<?php echo base_url('order/view/'.$row->id); ?>">
-                                        <td><?php echo $row->tagcode; ?></td>
-                                        <td><?php echo $row->username; ?></td>
+                                        <td><a href="<?php echo base_url('order/view/'.$row->id); ?>"><?php echo $row->tagcode; ?></a></td>
                                         <td><?php echo $row->itemcount; ?></td>
                                         <td><?php echo $row->statusname; ?></td>
-                                        <td><?php echo ($row->isdeleted != true ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>'); ?></td>
+                                        <td><?php echo ($row->status != "CANCE" ? '<span class="label label-success">'.$row->statusname.'</span>' : '<span class="label label-danger">'.$row->statusname.'</span>'); ?></td>
                                         <td><?php echo date("l, F d Y - H:i", strtotime($row->orderdate)); ?></td>
-                                        </a>
+                                        <td><?php echo $row->username; ?></td>
                                     </tr>
                                     <?php
                                 }

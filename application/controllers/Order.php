@@ -45,11 +45,66 @@ class Order extends MY_Controller{
         }
     }
 
-    public function view(){
-        
+    public function view($id){
+        $this->model["title"] = "View Order";
+        $this->model["data"]["view"] = true;
+        if($id != ""){
+            $data = $this->mod_order->getorder($id);
+            if($data != null){
+                $this->model["data"]["form_data"] = $data;
+                //echo print_r($this->model["form_data"]->details);
+                $this->load->view("_layout", $this->model);
+            }else{
+                $this->session->set_flashdata('message', 'Order data not found');
+                $this->session->set_flashdata('messageType', 'warning');
+                redirect("order");
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Invalid parameter');
+            $this->session->set_flashdata('messageType', 'warning');
+            redirect("order");
+        }
+    }
+
+    public function cancel($id){
+        if($id != ""){
+            $this->mod_order->cancelorder($id);
+            $this->session->set_flashdata('message', 'Order canceled');
+            $this->session->set_flashdata('messageType', 'success');
+        }else{
+            $this->session->set_flashdata('message', 'Invalid parameter');
+            $this->session->set_flashdata('messageType', 'warning');
+        }
+        redirect("order");
     }
 
     public function delete(){
-        
+        if($this->input->method() == 'post'){
+            if($id != ""){
+                $this->mod_order->cancelorder($this->input->post("id"));
+                $this->session->set_flashdata('message', 'Order canceled');
+                $this->session->set_flashdata('messageType', 'success');
+            }else{
+                $this->session->set_flashdata('message', 'Invalid parameter');
+                $this->session->set_flashdata('messageType', 'warning');
+                redirect("order");
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Invalid url');
+            $this->session->set_flashdata('messageType', 'danger');
+            redirect('order');
+        }
+    }
+
+    public function take($id){
+        if($id != ""){
+            $this->mod_order->takeorder($id);
+            $this->session->set_flashdata('message', 'Stock ordered mark as taken');
+            $this->session->set_flashdata('messageType', 'success');
+        }else{
+            $this->session->set_flashdata('message', 'Invalid parameter');
+            $this->session->set_flashdata('messageType', 'warning');
+        }
+        redirect("order");
     }
 }

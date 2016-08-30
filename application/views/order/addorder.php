@@ -4,7 +4,7 @@
         <small><?php 
         if($edit == true || $view == true){
             echo "(".(isset($form_data->tagcode)?$form_data->tagcode : '').")";
-        } 
+        }
         ?></small>
     </h1>
     <ol class="breadcrumb">
@@ -23,27 +23,83 @@
                 <form id="form-order" class="form-horizontal" action="<?php echo base_url($form_action); ?>" method="post">
                     <input type="hidden" name="id" value="<?php echo set_value('id', isset($form_data->id)?$form_data->id : ''); ?>" >
                     <div class="box-body">
+                        <?php if($view == false){ ?>
                         <div class="row">
                             <div class="col-md-12">
-                                <span class="btn btn-success" id="search-item"
+                                <span class="btn btn-success pull-right" id="search-item"
                                 data-toggle="modal" data-target="#myModal">
-                                    <i class="fa fa-search"></i> Search Item
+                                    <i class="fa fa-search"></i> Add Item Stock
                                 </span>
                             </div>
                         </div>
+                        <?php }else{ ?>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Tag Code</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" 
+                                        value="<?php echo isset($form_data->tagcode)?$form_data->tagcode : ''; ?>" name="code"
+                                        <?php if($view == TRUE){ echo "disabled"; } ?> maxlength="10">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Ordered By</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="name" 
+                                        value="<?php echo isset($form_data->username)?$form_data->username : ''; ?>" 
+                                        <?php if($view == TRUE){ echo "disabled"; } ?> required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Order Date</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" 
+                                        value="<?php echo isset($form_data->orderdate)?date("l, F d Y - H:i", strtotime($form_data->orderdate)) : ''; ?>" name="code"
+                                        <?php if($view == TRUE){ echo "disabled"; } ?> maxlength="10">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Status</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="name" 
+                                        value="<?php echo isset($form_data->statusname)?$form_data->statusname : ''; ?>" 
+                                        <?php if($view == TRUE){ echo "disabled"; } ?> required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
                         <br/>
                         <table id="table" class="table table-striped table-hover table-bordered">
                             <thead>
                                 <tr>
+                                    <?php if($view == true){ ?>
+                                    <th>Item Name</th>
+                                    <th>Total Requsted</th>
+                                    <th>Piece</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                    <?php }else{ ?>
                                     <th>Item Name</th>
                                     <th>Total Requsted</th>
                                     <th>Total Limit</th>
                                     <th>Piece</th>
-                                    <th>&nbsp;</th>
+                                    <th>Action</th>
+                                    <?php } ?>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php
+                            if($view == false){
                                 foreach($form_data["details"] as $row){
                                     ?>
                                     <tr>
@@ -61,6 +117,27 @@
                                     </tr>
                                     <?php
                                 }
+                            }else{
+                                foreach($form_data->details as $row){
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $row->itemname; ?></td>
+                                        <td><?php echo $row->total; ?></td>
+                                        <td><?php echo $row->piece; ?></td>
+                                        <td><span class="label label-success"><?php echo $row->statusname; ?></span></td>
+                                        <td><?php
+                                            if($form_data->status != 'CANCE' && $form_data->isdeleted != TRUE){
+                                                if($row->status == 'WT'){
+                                                    ?>
+                                                    <span onClick="takestock('<?php echo $row->id; ?>')" style="cursor:pointer;color:blue;">Mark as taken</span>
+                                                    <?php
+                                                }
+                                            }
+                                        ?></td>
+                                    </tr>
+                                    <?php
+                                }
+                            }
                             ?>
                             </tbody>
                         </table>
@@ -70,7 +147,15 @@
                         <a href="<?php echo ($edit == true ? base_url('order/view/'.set_value('id', (isset($form_data->id)?$form_data->id : ''))) : base_url('order')); ?>" class="btn btn-default">Cancel</a>
                         <?php if($view == false){ ?>
                             <span id="submit-order" class="btn btn-info"><i class="fa fa-floppy-o"></i> Save</span>
-                        <?php } ?>
+                        <?php }else{
+                            if($form_data->status != "CANCE"){
+                                ?>
+                                <span id="cancel-order" class="btn btn-warning"><i class="fa fa-times"></i> Cancel Order</span>
+                                <span id="delete-order" class="btn btn-danger"><i class="fa fa-trash"></i> Delete Order</span>
+                                <?php
+                            }
+
+                        } ?>
                     </div>
                     <!-- /.box-footer -->
                 </form>
@@ -95,8 +180,37 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<form action="<?php echo base_url("order/delete/"); ?>" method="post" id="delete-form">
+    <input type="hidden" name="id" value="<?php echo $form_data->id; ?>">
+</form>
+<?php
+    if($view = true){
+        ?>
+<link rel="stylesheet" href="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.css'); ?>">
+<script src="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.min.js'); ?>"></script>
+<?php
+    } 
+?>
 <script>
 $(function(){
+    <?php
+        if($view = true){
+            ?>
+            $("#table").dataTable();
+            <?php
+        } 
+    ?>
+    $("#delete-order").click(function(){
+        if(confirm("Sure to delete this order?")){
+            $("#delete-form").submit();
+        }
+    });
+    $("#cancel-order").click(function(){
+        if(confirm("Sure to cancel this order?")){
+            window.location.href = "<?php echo base_url("order/cancel/".$form_data->id); ?>";
+        }
+    });
     $("#submit-order").click(function(){
         $(this).attr("disabled",true);
         $(this).html('<i class="fa fa-refresh fa-spin fa-fw" aria-hidden="true"></i><span class="sr-only">Please wait...</span>');
@@ -138,6 +252,12 @@ $(function(){
         return result;
     }
 });
+function takestock(id){
+    if(confirm("sure to mark this stock order to taken?")){
+        window.location.href="<?php echo base_url("order/take/"); ?>"+id;
+    }
+}
+
 function selectedItem(id,name,currentstock,stockunit){
     if(currentstock != 0){
         if(!checkifexists(name)){
