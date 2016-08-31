@@ -14,6 +14,9 @@ class Mod_report extends CI_Model{
     }
 
     public function orderreport(){
+        $userid = $this->input->get("userid");
+        $sdate = $this->input->get("sdate");
+        $edate = $this->input->get("edate");
         $userq = "";
         if($userid == null || $userid == "" || $userid == "all"){
             $userq .= ";";

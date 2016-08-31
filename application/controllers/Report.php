@@ -22,9 +22,6 @@ class Reports extends MY_Controller{
 
     public function order()
     {
-        $userid = $this->input->get("userid");
-        $sdate = $this->input->get("sdate");
-        $edate = $this->input->get("edate");
         
     }
 }
