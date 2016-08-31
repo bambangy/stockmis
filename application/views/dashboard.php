@@ -155,12 +155,10 @@
 <script>
 $(function(){
     $.getJSON("<?php echo base_url("dashboard/graphdata"); ?>", function(result){
-        console.log(result);
         var datas = [];
         jQuery.each(result, function(i, val){
         datas.push(val);
         });
-        console.log(datas);
 
         var line = new Morris.Line({
             element: 'line-chart',
